@@ -1,16 +1,11 @@
 var flappyBird = require('./flappy_bird');
-console.log('1');
-if(document.readyState == 'complete')
-{
-	console.log('2');
-  var app = new FlappyBird.flappyBird();
+
+if(document.readyState == 'complete') {
+  var app = new flappyBird.FlappyBird();
   app.run();
-}
-else
-{
-console.log('3');
+} else {
   document.addEventListener('DOMContentLoaded', function() {
-    var app = new FlappyBird.flappyBird();
+    var app = new flappyBird.FlappyBird();
     app.run();
   });
 }
