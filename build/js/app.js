@@ -5,12 +5,15 @@ var BirdGraphicsComponent = function(entity) {
 };
 
 BirdGraphicsComponent.prototype.draw = function(context) {
-	this.posX++;
+    var position = {x: 0, y: 0.5};
+
+    context.save();
+    context.translate(position.x, position.y);
     context.beginPath();
-    context.arc(this.posX, 50, 25, 0, 2 * Math.PI);
-    context.arc(this.posX+25, 42, 15, 0, 2 * Math.PI);
-    context.fillStyle = "blue";
+    context.arc(0, 0, 0.02, 0, 2 * Math.PI);
     context.fill();
+    context.closePath();
+    context.restore();
 };
 
 exports.BirdGraphicsComponent = BirdGraphicsComponent;
@@ -106,10 +109,12 @@ GraphicsSystem.prototype.tick = function() {
         this.canvas.height = this.canvas.offsetHeight;
     }
 
-    // Clear the canvas
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    // Rendering goes here
+    this.context.save();
+    this.context.translate(this.canvas.width / 2, this.canvas.height);
+    this.context.scale(this.canvas.height, -this.canvas.height);
+
     for (var i=0; i<this.entities.length; i++) {
         var entity = this.entities[i];
         if (!'graphics' in entity.components) {
@@ -118,9 +123,10 @@ GraphicsSystem.prototype.tick = function() {
 
         entity.components.graphics.draw(this.context);
     }
-    
-    // Continue the render loop
-    window.requestAnimationFrame(this.tick.bind(this));    
+
+    this.context.restore();
+
+    window.requestAnimationFrame(this.tick.bind(this));
 };
 
 exports.GraphicsSystem = GraphicsSystem;
