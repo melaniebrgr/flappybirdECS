@@ -1,6 +1,14 @@
 var flappyBird = require('./flappy_bird');
 
-document.addEventListener('DOMContentLoaded', function() {
+if(document.readyState == 'complete')
+{
+  var app = new flappyBird.FlappyBird();
+  app.run();
+}
+else
+{
+  document.addEventListener('DOMContentLoaded', function() {
     var app = new flappyBird.FlappyBird();
     app.run();
-});
+  });
+}
