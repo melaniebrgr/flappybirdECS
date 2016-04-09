@@ -1,10 +1,16 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var BirdGraphicsComponent = function(entity) {
     this.entity = entity;
+    this.posX = 50;
 };
 
-BirdGraphicsComponent.prototype.draw = function() {
-    console.log("Drawing a bird");
+BirdGraphicsComponent.prototype.draw = function(context) {
+	this.posX++;
+    context.beginPath();
+    context.arc(this.posX, 50, 25, 0, 2 * Math.PI);
+    context.arc(this.posX+25, 42, 15, 0, 2 * Math.PI);
+    context.fillStyle = "blue";
+    context.fill();
 };
 
 exports.BirdGraphicsComponent = BirdGraphicsComponent;
@@ -13,8 +19,15 @@ var PipeGraphicsComponent = function(entity) {
     this.entity = entity;
 };
 
-PipeGraphicsComponent.prototype.draw = function() {
-    console.log("Drawing a pipe");
+PipeGraphicsComponent.prototype.draw = function(context) {
+    context.beginPath();
+	context.moveTo(100,100);
+	context.lineTo(150,100);
+	context.lineTo(150,150);
+	context.lineTo(100,150);
+	context.lineTo(100,100);
+    context.fillStyle = "green";
+    context.fill();
 };
 
 exports.PipeGraphicsComponent = PipeGraphicsComponent;
@@ -62,13 +75,10 @@ exports.FlappyBird = FlappyBird;
 },{"./entities/bird":3,"./entities/pipe":4,"./systems/graphics":7}],6:[function(require,module,exports){
 var flappyBird = require('./flappy_bird');
 
-if(document.readyState == 'complete')
-{
+if(document.readyState == 'complete') {
   var app = new flappyBird.FlappyBird();
   app.run();
-}
-else
-{
+} else {
   document.addEventListener('DOMContentLoaded', function() {
     var app = new flappyBird.FlappyBird();
     app.run();
