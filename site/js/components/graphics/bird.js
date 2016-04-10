@@ -1,6 +1,5 @@
 var BirdGraphicsComponent = function(entity) {
     this.entity = entity;
-    this.posX = 50;
 };
 
 BirdGraphicsComponent.prototype.draw = function(context) {

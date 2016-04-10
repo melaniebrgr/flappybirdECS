@@ -1,7 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var BirdGraphicsComponent = function(entity) {
     this.entity = entity;
-    this.posX = 50;
 };
 
 BirdGraphicsComponent.prototype.draw = function(context) {
@@ -20,17 +19,19 @@ exports.BirdGraphicsComponent = BirdGraphicsComponent;
 },{}],2:[function(require,module,exports){
 var PipeGraphicsComponent = function(entity) {
     this.entity = entity;
+    this.height = 1;
+    this.width = 0.1;
 };
 
 PipeGraphicsComponent.prototype.draw = function(context) {
-    context.beginPath();
-	context.moveTo(100,100);
-	context.lineTo(150,100);
-	context.lineTo(150,150);
-	context.lineTo(100,150);
-	context.lineTo(100,100);
+	context.save()
+
+	context.translate(0.5 - this.width, 0);
     context.fillStyle = "green";
-    context.fill();
+	context.fillRect(0, 0, this.width, this.height);
+	context.clearRect(0, 0.5-this.height/8, this.width+1, this.height/4);
+
+    context.restore();
 };
 
 exports.PipeGraphicsComponent = PipeGraphicsComponent;
@@ -80,16 +81,20 @@ var Bird = function() {
 exports.Bird = Bird;
 },{"../components/graphics/bird":1,"../components/physics/physics":3}],5:[function(require,module,exports){
 var graphicsComponent = require("../components/graphics/pipe");
+var physicsComponent = require("../components/physics/physics");
 
 var Pipe = function() {
+	var physics = new physicsComponent.PhysicsComponent(this);
+
     var graphics = new graphicsComponent.PipeGraphicsComponent(this);
     this.components = {
+        physics: physics,
         graphics: graphics
     };
 };
 
 exports.Pipe = Pipe;
-},{"../components/graphics/pipe":2}],6:[function(require,module,exports){
+},{"../components/graphics/pipe":2,"../components/physics/physics":3}],6:[function(require,module,exports){
 var graphicsSystem = require('./systems/graphics');
 var physicsSystem = require('./systems/physics');
 var inputsSystem = require('./systems/inputs');
