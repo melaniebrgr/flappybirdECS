@@ -12,12 +12,12 @@ InputSystem.prototype.run = function() {
 
 InputSystem.prototype.onClick = function() {
     var bird = this.entities[0];
-    bird.components.physics.velocity.y = 0.45;
+    bird.components.physics.velocity.y = 0.37;
 };
 
 InputSystem.prototype.onTouch = function() {
     var bird = this.entities[0];
-    bird.components.physics.velocity.y = 0.45;
+    bird.components.physics.velocity.y = 0.37;
 }
 
 exports.InputSystem = InputSystem;

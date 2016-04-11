@@ -19,17 +19,20 @@ exports.BirdGraphicsComponent = BirdGraphicsComponent;
 },{}],2:[function(require,module,exports){
 var PipeGraphicsComponent = function(entity) {
     this.entity = entity;
-    this.height = 1;
+    this.height = 0.38;
     this.width = 0.1;
 };
 
 PipeGraphicsComponent.prototype.draw = function(context) {
+	var position = this.entity.components.physics.position;
+
 	context.save()
 
-	context.translate(0.5 - this.width, 0);
     context.fillStyle = "green";
+	context.translate(position.x - this.width, 0);
 	context.fillRect(0, 0, this.width, this.height);
-	context.clearRect(0, 0.5-this.height/8, this.width+1, this.height/4);
+	context.translate(0, 1-this.height);
+	context.fillRect(0, 0, this.width, this.height);
 
     context.restore();
 };
@@ -85,6 +88,8 @@ var physicsComponent = require("../components/physics/physics");
 
 var Pipe = function() {
 	var physics = new physicsComponent.PhysicsComponent(this);
+	physics.position.x = 0.5;
+    physics.velocity.x = -0.2;
 
     var graphics = new graphicsComponent.PipeGraphicsComponent(this);
     this.components = {
@@ -185,12 +190,12 @@ InputSystem.prototype.run = function() {
 
 InputSystem.prototype.onClick = function() {
     var bird = this.entities[0];
-    bird.components.physics.velocity.y = 0.45;
+    bird.components.physics.velocity.y = 0.37;
 };
 
 InputSystem.prototype.onTouch = function() {
     var bird = this.entities[0];
-    bird.components.physics.velocity.y = 0.45;
+    bird.components.physics.velocity.y = 0.37;
 }
 
 exports.InputSystem = InputSystem;
