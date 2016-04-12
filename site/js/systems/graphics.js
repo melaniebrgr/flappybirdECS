@@ -1,3 +1,5 @@
+var pipe = require('../entities/pipe');
+
 var GraphicsSystem = function(entities) {
     this.entities = entities;
     // Canvas is where we draw
@@ -7,8 +9,12 @@ var GraphicsSystem = function(entities) {
 };
 
 GraphicsSystem.prototype.run = function() {
+    function addPipe() {
+        this.entities.push(new pipe.Pipe());
+    }
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
+    window.setInterval(addPipe.bind(this), 2000);
 };
 
 GraphicsSystem.prototype.tick = function() {
