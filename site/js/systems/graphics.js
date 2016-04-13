@@ -9,11 +9,12 @@ var GraphicsSystem = function(entities) {
 };
 
 GraphicsSystem.prototype.run = function() {
-    function addPipe() {
-        this.entities.push(new pipe.Pipe());
-    }
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
+
+    function addPipe() {
+        this.entities.push(new pipe.Pipe('top'), new pipe.Pipe('bottom'));
+    }
     window.setInterval(addPipe.bind(this), 2000);
 };
 

@@ -5,17 +5,17 @@ var CollisionSystem = function(entities) {
 CollisionSystem.prototype.tick = function() {
     for (var i=0; i<this.entities.length; i++) {
         var entityA = this.entities[i];
-        if (!'collision' in entityA.components) {
+        if ('collision' in entityA.components == false) {
             continue;
         }
 
         for (var j=i+1; j<this.entities.length; j++) {
             var entityB = this.entities[j];
-            if (!'collision' in entityB.components) {
+            if ('collision' in entityB.components == false) {
                 continue;
             }
 
-            if (!entityA.components.collision.collidesWith(entityB)) {
+            if (entityA.components.collision.collidesWith(entityB) == false) {
                 continue;
             }
 

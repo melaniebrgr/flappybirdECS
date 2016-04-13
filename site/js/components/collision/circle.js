@@ -48,8 +48,8 @@ CircleCollisionComponent.prototype.collideRect = function(entity) {
     var closest = {
         x: clamp(positionA.x, positionB.x - sizeB.x / 2,
                  positionB.x + sizeB.x / 2),
-        y: clamp(positionA.y, positionB.y - sizeB.y / 2,
-                 positionB.y + sizeB.y / 2)
+        y: clamp(positionA.y, positionB.y,
+                 positionB.y + sizeB.y)
     };
 
 

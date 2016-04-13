@@ -49,8 +49,8 @@ CircleCollisionComponent.prototype.collideRect = function(entity) {
     var closest = {
         x: clamp(positionA.x, positionB.x - sizeB.x / 2,
                  positionB.x + sizeB.x / 2),
-        y: clamp(positionA.y, positionB.y - sizeB.y / 2,
-                 positionB.y + sizeB.y / 2)
+        y: clamp(positionA.y, positionB.y,
+                 positionB.y + sizeB.y)
     };
 
 
@@ -128,20 +128,21 @@ exports.BirdGraphicsComponent = BirdGraphicsComponent;
 },{}],4:[function(require,module,exports){
 var PipeGraphicsComponent = function(entity) {
     this.entity = entity;
-    this.height = 0.38;
-    this.width = 0.1;
+    this.size = {
+    	x: 0.1,
+    	y: 0.38
+    };
 };
 
 PipeGraphicsComponent.prototype.draw = function(context) {
 	var position = this.entity.components.physics.position;
-
+	var location = this.entity.components.location;
+	
 	context.save()
 
     context.fillStyle = "green";
-	context.translate(position.x - this.width, 0);
-	context.fillRect(0, 0, this.width, this.height);
-	context.translate(0, 1-this.height);
-	context.fillRect(0, 0, this.width, this.height);
+	context.translate(position.x - this.size.x/2, position.y);
+	context.fillRect(0, 0, this.size.x, this.size.y);
 
     context.restore();
 };
@@ -155,10 +156,12 @@ var PhysicsComponent = function(entity) {
         x: 0,
         y: 0
     };
+
     this.velocity = {
         x: 0,
         y: 0
     };
+    
     this.acceleration = {
         x: 0,
         y: 0
@@ -206,18 +209,21 @@ var graphicsComponent = require("../components/graphics/pipe");
 var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/rect");
 
-var Pipe = function() {
+var Pipe = function(location) {
 	var physics = new physicsComponent.PhysicsComponent(this);
 	physics.position.x = 1.5;
     physics.velocity.x = -0.2;
 
     var graphics = new graphicsComponent.PipeGraphicsComponent(this);
-    var collision = new collisionComponent.RectCollisionComponent(this, {x:0.1, y:0.38});
+    var collision = new collisionComponent.RectCollisionComponent(this, graphics.size);
+
+    if (location === 'top') physics.position.y = 1 - graphics.size.y;
 
     this.components = {
         physics: physics,
         graphics: graphics,
-        collision: collision
+        collision: collision,
+        location: location
     };
 };
 
@@ -230,7 +236,7 @@ var bird = require('./entities/bird');
 var pipe = require('./entities/pipe');
 
 var FlappyBird = function() {
-    this.entities = [new bird.Bird(), new pipe.Pipe()];
+    this.entities = [new bird.Bird(), new pipe.Pipe('top'), new pipe.Pipe('bottom')];
     this.graphics = new graphicsSystem.GraphicsSystem(this.entities);
     this.physics = new physicsSystem.PhysicsSystem(this.entities);
     this.inputs =  new inputsSystem.InputSystem(this.entities);
@@ -263,17 +269,17 @@ var CollisionSystem = function(entities) {
 CollisionSystem.prototype.tick = function() {
     for (var i=0; i<this.entities.length; i++) {
         var entityA = this.entities[i];
-        if (!'collision' in entityA.components) {
+        if ('collision' in entityA.components == false) {
             continue;
         }
 
         for (var j=i+1; j<this.entities.length; j++) {
             var entityB = this.entities[j];
-            if (!'collision' in entityB.components) {
+            if ('collision' in entityB.components == false) {
                 continue;
             }
 
-            if (!entityA.components.collision.collidesWith(entityB)) {
+            if (entityA.components.collision.collidesWith(entityB) == false) {
                 continue;
             }
 
@@ -301,11 +307,12 @@ var GraphicsSystem = function(entities) {
 };
 
 GraphicsSystem.prototype.run = function() {
-    function addPipe() {
-        this.entities.push(new pipe.Pipe());
-    }
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
+
+    function addPipe() {
+        this.entities.push(new pipe.Pipe('top'), new pipe.Pipe('bottom'));
+    }
     window.setInterval(addPipe.bind(this), 2000);
 };
 
