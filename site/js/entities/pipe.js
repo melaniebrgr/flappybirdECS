@@ -23,6 +23,7 @@ var Pipe = function(location) {
 
 Pipe.prototype.onCollision = function(entity) {
     console.log("Pipe collided with entity:", entity);
+    // this.components.physics.position.y += 1.5;
 };
 
 exports.Pipe = Pipe;

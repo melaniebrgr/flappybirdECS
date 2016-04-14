@@ -231,6 +231,7 @@ var Pipe = function(location) {
 
 Pipe.prototype.onCollision = function(entity) {
     console.log("Pipe collided with entity:", entity);
+    // this.components.physics.position.y += 1.5;
 };
 
 exports.Pipe = Pipe;
@@ -293,12 +294,20 @@ CollisionSystem.prototype.tick = function() {
             // runs any entity specific methods on collision
             if (entityA.components.collision.onCollision) {
                 entityA.components.collision.onCollision(entityB);
+                this.resetPipes();
             }
 
             if (entityB.components.collision.onCollision) {
                 entityB.components.collision.onCollision(entityA);
+                this.resetPipes();
             }
         }
+    }
+};
+
+CollisionSystem.prototype.resetPipes = function() {
+    for (var i=1; i<this.entities.length; i++ ) {
+        this.entities[i].components.physics.position.y += 1.5;
     }
 };
 
