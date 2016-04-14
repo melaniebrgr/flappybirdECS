@@ -9,6 +9,7 @@ var Pipe = function(location) {
 
     var graphics = new graphicsComponent.PipeGraphicsComponent(this);
     var collision = new collisionComponent.RectCollisionComponent(this, graphics.size);
+    collision.onCollision = this.onCollision.bind(this);
 
     if (location === 'top') physics.position.y = 1 - graphics.size.y;
 
@@ -18,6 +19,10 @@ var Pipe = function(location) {
         collision: collision,
         location: location
     };
+};
+
+Pipe.prototype.onCollision = function(entity) {
+    console.log("Pipe collided with entity:", entity);
 };
 
 exports.Pipe = Pipe;

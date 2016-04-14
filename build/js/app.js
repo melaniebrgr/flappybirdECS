@@ -181,7 +181,6 @@ exports.PhysicsComponent = PhysicsComponent;
 var graphicsComponent = require("../components/graphics/bird");
 var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/circle");
-// var settings = require("../settings");
 
 var Bird = function() {
     var physics = new physicsComponent.PhysicsComponent(this);
@@ -200,7 +199,9 @@ var Bird = function() {
 };
 
 Bird.prototype.onCollision = function(entity) {
-    console.log("Bird collided with entity:", entity);
+    // console.log("Bird collided with entity:", entity);
+    this.components.physics.position.y = 0.5;
+    this.components.physics.acceleration.y = -0.8;
 };
 
 exports.Bird = Bird;
@@ -216,6 +217,7 @@ var Pipe = function(location) {
 
     var graphics = new graphicsComponent.PipeGraphicsComponent(this);
     var collision = new collisionComponent.RectCollisionComponent(this, graphics.size);
+    collision.onCollision = this.onCollision.bind(this);
 
     if (location === 'top') physics.position.y = 1 - graphics.size.y;
 
@@ -225,6 +227,10 @@ var Pipe = function(location) {
         collision: collision,
         location: location
     };
+};
+
+Pipe.prototype.onCollision = function(entity) {
+    console.log("Pipe collided with entity:", entity);
 };
 
 exports.Pipe = Pipe;
@@ -278,11 +284,13 @@ CollisionSystem.prototype.tick = function() {
             if ('collision' in entityB.components == false) {
                 continue;
             }
-
+            // first determines the type of collision (circle-circle, square-square, circle-square)
+            // then does the appropriate calculation that returns a boolean indicating whether a collision occured
             if (entityA.components.collision.collidesWith(entityB) == false) {
                 continue;
             }
 
+            // runs any entity specific methods on collision
             if (entityA.components.collision.onCollision) {
                 entityA.components.collision.onCollision(entityB);
             }
