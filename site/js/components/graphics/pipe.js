@@ -1,9 +1,6 @@
-var PipeGraphicsComponent = function(entity) {
+var PipeGraphicsComponent = function(entity, size) {
     this.entity = entity;
-    this.size = {
-    	x: 0.1,
-    	y: 0.38
-    };
+    this.size = size;
 };
 
 PipeGraphicsComponent.prototype.draw = function(context) {

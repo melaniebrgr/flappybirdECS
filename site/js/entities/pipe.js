@@ -1,14 +1,16 @@
 var graphicsComponent = require("../components/graphics/pipe");
 var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/rect");
+var rectSizingComponent = require("../components/size/rect");
 
 var Pipe = function(location) {
 	var physics = new physicsComponent.PhysicsComponent(this);
 	physics.position.x = 1.5;
     physics.velocity.x = -0.2;
 
-    var graphics = new graphicsComponent.PipeGraphicsComponent(this);
-    var collision = new collisionComponent.RectCollisionComponent(this, graphics.size);
+    var size = new rectSizingComponent.RectSizingComponent(this);
+    var graphics = new graphicsComponent.PipeGraphicsComponent(this, size.size);
+    var collision = new collisionComponent.RectCollisionComponent(this, size.size);
     collision.onCollision = this.onCollision.bind(this);
 
     if (location === 'top') physics.position.y = 1 - graphics.size.y;
