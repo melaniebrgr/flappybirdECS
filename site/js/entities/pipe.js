@@ -4,6 +4,7 @@ var collisionComponent = require("../components/collision/rect");
 var rectSizingComponent = require("../components/size/rect");
 
 var Pipe = function(location, increment) {
+    
 	var physics = new physicsComponent.PhysicsComponent(this);
 	physics.position.x = 1.5;
     physics.velocity.x = -0.2;

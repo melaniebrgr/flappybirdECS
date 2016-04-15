@@ -8,17 +8,22 @@ var GraphicsSystem = function(entities) {
     this.context = this.canvas.getContext('2d');
 };
 
-GraphicsSystem.prototype.run = function() {
+GraphicsSystem.prototype.run = function() {    
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
 
-    var increment = 0.025;
+    var increment = 0;
     function addPipe() {
         this.entities.push(new pipe.Pipe('top', increment), new pipe.Pipe('bottom', increment));
         increment += 0.025;
-        console.log('increment:', increment);
+
+        var delay = 2000 - (increment * 5000);
+        delay = delay < 1000 ? 1000 : delay;
+        window.setTimeout(addPipe.bind(this), delay);
+        console.log('delay:', delay);
     }
-    window.setInterval(addPipe.bind(this), 2000);
+    // window.setInterval(addPipe.bind(this), 2000);
+    window.setTimeout(addPipe.bind(this), 2000);
 };
 
 GraphicsSystem.prototype.tick = function() {

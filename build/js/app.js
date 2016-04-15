@@ -183,12 +183,11 @@ var RectSizingComponent = function(x, y) {
 };
 
 RectSizingComponent.prototype.randomY = function(increment) {
-	var increment = increment ? increment : 0;
+    var increment = increment ? increment : 0;
 	var max = this.size.y + increment;
 	var min = this.size.y + increment/4;
 	var ranY = Math.random() * (max - min) + min;
 	this.size.y = ranY > 0.41 ? 0.41 : ranY;
-	console.log('size y:', this.size.y);
 };
 
 exports.RectSizingComponent = RectSizingComponent;
@@ -227,6 +226,7 @@ var collisionComponent = require("../components/collision/rect");
 var rectSizingComponent = require("../components/size/rect");
 
 var Pipe = function(location, increment) {
+    
 	var physics = new physicsComponent.PhysicsComponent(this);
 	physics.position.x = 1.5;
     physics.velocity.x = -0.2;
@@ -341,17 +341,22 @@ var GraphicsSystem = function(entities) {
     this.context = this.canvas.getContext('2d');
 };
 
-GraphicsSystem.prototype.run = function() {
+GraphicsSystem.prototype.run = function() {    
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
 
-    var increment = 0.025;
+    var increment = 0;
     function addPipe() {
         this.entities.push(new pipe.Pipe('top', increment), new pipe.Pipe('bottom', increment));
         increment += 0.025;
-        console.log('increment:', increment);
+
+        var delay = 2000 - (increment * 5000);
+        delay = delay < 1000 ? 1000 : delay;
+        window.setTimeout(addPipe.bind(this), delay);
+        console.log('delay:', delay);
     }
-    window.setInterval(addPipe.bind(this), 2000);
+    // window.setInterval(addPipe.bind(this), 2000);
+    window.setTimeout(addPipe.bind(this), 2000);
 };
 
 GraphicsSystem.prototype.tick = function() {
