@@ -20,10 +20,9 @@ GraphicsSystem.prototype.run = function() {
         var delay = 2000 - (increment * 5000);
         delay = delay < 1000 ? 1000 : delay;
         window.setTimeout(addPipe.bind(this), delay);
-        console.log('delay:', delay);
     }
     // window.setInterval(addPipe.bind(this), 2000);
-    window.setTimeout(addPipe.bind(this), 2000);
+    window.setTimeout(addPipe.bind(this), 3000);
 };
 
 GraphicsSystem.prototype.tick = function() {
