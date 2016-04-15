@@ -175,12 +175,20 @@ PhysicsComponent.prototype.update = function(delta) {
 
 exports.PhysicsComponent = PhysicsComponent;
 },{}],6:[function(require,module,exports){
-var RectSizingComponent = function(entity) {
-	this.entity = entity;
+var RectSizingComponent = function(x, y) {
 	this.size = {
-		x: 0.1,
-		y: 0.38
+		x: x,
+		y: y
 	}
+};
+
+RectSizingComponent.prototype.randomY = function(increment) {
+	var increment = increment ? increment : 0;
+	var max = this.size.y + increment;
+	var min = this.size.y + increment/4;
+	var ranY = Math.random() * (max - min) + min;
+	this.size.y = ranY > 0.41 ? 0.41 : ranY;
+	console.log('size y:', this.size.y);
 };
 
 exports.RectSizingComponent = RectSizingComponent;
@@ -218,17 +226,19 @@ var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/rect");
 var rectSizingComponent = require("../components/size/rect");
 
-var Pipe = function(location) {
+var Pipe = function(location, increment) {
 	var physics = new physicsComponent.PhysicsComponent(this);
 	physics.position.x = 1.5;
     physics.velocity.x = -0.2;
 
-    var size = new rectSizingComponent.RectSizingComponent(this);
+    var size = new rectSizingComponent.RectSizingComponent(0.1, 0.22);
+    size.randomY(increment);
+
     var graphics = new graphicsComponent.PipeGraphicsComponent(this, size.size);
     var collision = new collisionComponent.RectCollisionComponent(this, size.size);
     collision.onCollision = this.onCollision.bind(this);
 
-    if (location === 'top') physics.position.y = 1 - graphics.size.y;
+    if (location === 'top') physics.position.y = 1 - size.size.y;
 
     this.components = {
         physics: physics,
@@ -239,8 +249,7 @@ var Pipe = function(location) {
 };
 
 Pipe.prototype.onCollision = function(entity) {
-    console.log("Pipe collided with entity:", entity);
-    // this.components.physics.position.y += 1.5;
+    // console.log("Pipe collided with entity:", entity);
 };
 
 exports.Pipe = Pipe;
@@ -336,8 +345,11 @@ GraphicsSystem.prototype.run = function() {
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
 
+    var increment = 0.025;
     function addPipe() {
-        this.entities.push(new pipe.Pipe('top'), new pipe.Pipe('bottom'));
+        this.entities.push(new pipe.Pipe('top', increment), new pipe.Pipe('bottom', increment));
+        increment += 0.025;
+        console.log('increment:', increment);
     }
     window.setInterval(addPipe.bind(this), 2000);
 };

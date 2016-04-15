@@ -12,8 +12,11 @@ GraphicsSystem.prototype.run = function() {
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
 
+    var increment = 0.025;
     function addPipe() {
-        this.entities.push(new pipe.Pipe('top'), new pipe.Pipe('bottom'));
+        this.entities.push(new pipe.Pipe('top', increment), new pipe.Pipe('bottom', increment));
+        increment += 0.025;
+        console.log('increment:', increment);
     }
     window.setInterval(addPipe.bind(this), 2000);
 };
