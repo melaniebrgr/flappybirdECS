@@ -4,15 +4,13 @@ var collisionComponent = require("../components/collision/rect");
 var rectSizingComponent = require("../components/size/rect");
 
 var Pipe = function(location, increment) {
-    var canvas = document.getElementById('main-canvas');
-    var canvasWidth = canvas.clientWidth/canvas.clientHeight;
+    
+	var physics = new physicsComponent.PhysicsComponent(this);
+	physics.position.x = 1.5;
+    physics.velocity.x = -0.2;
 
     var size = new rectSizingComponent.RectSizingComponent(0.1, 0.22);
     size.randomY(increment);
-
-    var physics = new physicsComponent.PhysicsComponent(this);
-    physics.position.x = canvasWidth/2;
-    physics.velocity.x = -0.2;
 
     var graphics = new graphicsComponent.PipeGraphicsComponent(this, size.size);
     var collision = new collisionComponent.RectCollisionComponent(this, size.size);
@@ -29,7 +27,7 @@ var Pipe = function(location, increment) {
 };
 
 Pipe.prototype.onCollision = function(entity) {
-    // Pipe specific collision events
+    // console.log("Pipe collided with entity:", entity);
 };
 
 exports.Pipe = Pipe;

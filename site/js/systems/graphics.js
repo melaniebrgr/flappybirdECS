@@ -49,10 +49,16 @@ GraphicsSystem.prototype.tick = function() {
 };
 
 GraphicsSystem.prototype.reset = function() {
-    this.entities.splice(2,this.entities.length);
+    console.log('Graphics before:', this.entities);
+    if (this.entities.length > 3) {
+        this.entities.splice(3,this.entities.length);
+    }
     this.increment = 0;
     this.entities[0].components.physics.position.y = 0.5;
-    this.entities[0].components.physics.velocity.y = 0;
+    this.entities[0].components.physics.acceleration.y = -0.8;
+    this.entities[1].components.physics.position.x = 1.5;
+    this.entities[2].components.physics.position.x = 1.5;
+    console.log('Graphics after:', this.entities);
 };
 
 exports.GraphicsSystem = GraphicsSystem;
