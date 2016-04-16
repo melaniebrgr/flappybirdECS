@@ -47,8 +47,8 @@ CircleCollisionComponent.prototype.collideRect = function(entity) {
     var sizeB = entity.components.collision.size;
 
     var closest = {
-        x: clamp(positionA.x, positionB.x - sizeB.x / 2,
-                 positionB.x + sizeB.x / 2),
+        x: clamp(positionA.x, positionB.x,
+                 positionB.x + sizeB.x),
         y: clamp(positionA.y, positionB.y,
                  positionB.y + sizeB.y)
     };
@@ -92,15 +92,29 @@ RectCollisionComponent.prototype.collideRect = function(entity) {
     var sizeA = this.size;
     var sizeB = entity.components.collision.size;
 
-    var leftA = positionA.x - sizeA.x / 2;
-    var rightA = positionA.x + sizeA.x / 2;
-    var bottomA = positionA.y - sizeA.y / 2;
-    var topA = positionA.y + sizeA.y / 2;
+    var leftA = positionA.x;
+    var rightA = positionA.x + sizeA.x;
+    var bottomA = positionA.y;
+    var topA = positionA.y + sizeA.y;
 
-    var leftB = positionB.x - sizeB.x / 2;
-    var rightB = positionB.x + sizeB.x / 2;
-    var bottomB = positionB.y - sizeB.y / 2;
-    var topB = positionB.y + sizeB.y / 2;
+    var leftB = positionB.x;
+    var rightB = positionB.x + sizeB.x;
+    var bottomB = positionB.y;
+    var topB = positionB.y + sizeB.y;
+
+    // Log edges of colliding rectangles
+    // if (!(leftA > rightB || leftB > rightA || bottomA > topB || bottomB > topA)) {
+    //     console.log('A:', this.entity);
+    //     console.log('B:', entity);
+    //     console.log('leftA:', leftA);
+    //     console.log('rightA:', rightA);
+    //     console.log('bottomA:', bottomA);
+    //     console.log('topA:', topA);
+    //     console.log('leftB:', leftB);
+    //     console.log('rightB:', rightB);
+    //     console.log('bottomB:', bottomB);
+    //     console.log('topB:', topB);
+    // }
 
     return !(leftA > rightB || leftB > rightA ||
              bottomA > topB || bottomB > topA);
@@ -157,7 +171,7 @@ PipeGraphicsComponent.prototype.draw = function(context) {
 	context.save()
 
     context.fillStyle = "green";
-	context.translate(position.x - this.size.x/2, position.y);
+	context.translate(position.x, position.y);
 	context.fillRect(0, 0, this.size.x, this.size.y);
 
     context.restore();
@@ -250,7 +264,8 @@ var Floor = function() {
 
 	var physics = new physicsComponent.PhysicsComponent(this);
 	physics.position.x = -canvasWidth/2;
-	physics.position.y = -0.01;
+    // Place slightyl lower than height so does not collide with pipes
+	physics.position.y = -0.0105;
 
     // var graphics = new graphicsComponent.FloorGraphicsComponent(this, size.size);
 
@@ -266,7 +281,7 @@ var Floor = function() {
 };
 
 Floor.prototype.onCollision = function(entity) {
-    console.log('Floor collided with', entity);
+    // console.log('Floor collided with', entity);
 };
 
 exports.Floor = Floor;

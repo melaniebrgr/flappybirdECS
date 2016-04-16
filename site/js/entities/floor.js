@@ -11,7 +11,8 @@ var Floor = function() {
 
 	var physics = new physicsComponent.PhysicsComponent(this);
 	physics.position.x = -canvasWidth/2;
-	physics.position.y = -0.01;
+    // Place slightyl lower than height so does not collide with pipes
+	physics.position.y = -0.0105;
 
     // var graphics = new graphicsComponent.FloorGraphicsComponent(this, size.size);
 
@@ -27,7 +28,7 @@ var Floor = function() {
 };
 
 Floor.prototype.onCollision = function(entity) {
-    console.log('Floor collided with', entity);
+    // console.log('Floor collided with', entity);
 };
 
 exports.Floor = Floor;

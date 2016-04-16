@@ -25,15 +25,29 @@ RectCollisionComponent.prototype.collideRect = function(entity) {
     var sizeA = this.size;
     var sizeB = entity.components.collision.size;
 
-    var leftA = positionA.x - sizeA.x / 2;
-    var rightA = positionA.x + sizeA.x / 2;
-    var bottomA = positionA.y - sizeA.y / 2;
-    var topA = positionA.y + sizeA.y / 2;
+    var leftA = positionA.x;
+    var rightA = positionA.x + sizeA.x;
+    var bottomA = positionA.y;
+    var topA = positionA.y + sizeA.y;
 
-    var leftB = positionB.x - sizeB.x / 2;
-    var rightB = positionB.x + sizeB.x / 2;
-    var bottomB = positionB.y - sizeB.y / 2;
-    var topB = positionB.y + sizeB.y / 2;
+    var leftB = positionB.x;
+    var rightB = positionB.x + sizeB.x;
+    var bottomB = positionB.y;
+    var topB = positionB.y + sizeB.y;
+
+    // Log edges of colliding rectangles
+    // if (!(leftA > rightB || leftB > rightA || bottomA > topB || bottomB > topA)) {
+    //     console.log('A:', this.entity);
+    //     console.log('B:', entity);
+    //     console.log('leftA:', leftA);
+    //     console.log('rightA:', rightA);
+    //     console.log('bottomA:', bottomA);
+    //     console.log('topA:', topA);
+    //     console.log('leftB:', leftB);
+    //     console.log('rightB:', rightB);
+    //     console.log('bottomB:', bottomB);
+    //     console.log('topB:', topB);
+    // }
 
     return !(leftA > rightB || leftB > rightA ||
              bottomA > topB || bottomB > topA);
