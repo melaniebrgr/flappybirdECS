@@ -1,27 +1,26 @@
 var pipe = require('../entities/pipe');
 
-var GraphicsSystem = function(entities) {
-    this.entities = entities;
+var GraphicsSystem = function(app) {
+    this.entities = app.entities;
     // Canvas is where we draw
     this.canvas = document.getElementById('main-canvas');
     // Context is what we draw to
     this.context = this.canvas.getContext('2d');
+    this.increment = 0;
 };
 
 GraphicsSystem.prototype.run = function() {    
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
 
-    var increment = 0;
     function addPipe() {
-        this.entities.push(new pipe.Pipe('top', increment), new pipe.Pipe('bottom', increment));
-        increment += 0.025;
+        this.entities.push(new pipe.Pipe('top', this.increment), new pipe.Pipe('bottom', this.increment));
+        this.increment += 0.025;
 
-        var delay = 2000 - (increment * 5000);
+        var delay = 2000 - (this.increment * 5000);
         delay = delay < 1000 ? 1000 : delay;
         window.setTimeout(addPipe.bind(this), delay);
     }
-    // window.setInterval(addPipe.bind(this), 2000);
     window.setTimeout(addPipe.bind(this), 3000);
 };
 
@@ -54,6 +53,7 @@ GraphicsSystem.prototype.reset = function() {
     if (this.entities.length > 3) {
         this.entities.splice(3,this.entities.length);
     }
+    this.increment = 0;
     this.entities[0].components.physics.position.y = 0.5;
     this.entities[0].components.physics.acceleration.y = -0.8;
     this.entities[1].components.physics.position.x = 1.5;

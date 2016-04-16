@@ -1,5 +1,5 @@
-var InputSystem = function(entities) {
-    this.entities = entities;
+var InputSystem = function(app) {
+    this.entities = app.entities;
 
     // Canvas is where we get input from
     this.canvas = document.getElementById('main-canvas');

@@ -262,9 +262,9 @@ var pipe = require('./entities/pipe');
 
 var FlappyBird = function() {
     this.entities = [new bird.Bird(), new pipe.Pipe('top'), new pipe.Pipe('bottom')];
-    this.graphics = new graphicsSystem.GraphicsSystem(this.entities);
-    this.physics = new physicsSystem.PhysicsSystem(this.entities);
-    this.inputs =  new inputsSystem.InputSystem(this.entities);
+    this.graphics = new graphicsSystem.GraphicsSystem(this);
+    this.physics = new physicsSystem.PhysicsSystem(this);
+    this.inputs =  new inputsSystem.InputSystem(this);
 };
 
 FlappyBird.prototype.run = function() {
@@ -275,7 +275,6 @@ FlappyBird.prototype.run = function() {
 
 FlappyBird.prototype.reset = function() {
     this.graphics.reset();
-    // console.log('RESET:', this.entities);
 };
 
 exports.FlappyBird = FlappyBird;
@@ -297,8 +296,9 @@ if(document.readyState == 'complete') {
   });
 }
 },{"./flappy_bird":9}],11:[function(require,module,exports){
-var CollisionSystem = function(entities) {
-    this.entities = entities;
+var CollisionSystem = function(app) {
+    this.app = app;
+    this.entities = app.entities;
 };
 
 CollisionSystem.prototype.tick = function() {
@@ -319,53 +319,49 @@ CollisionSystem.prototype.tick = function() {
                 continue;
             }
 
-            this.resetPipes();
-
             // runs any entity specific methods on collision
             if (entityA.components.collision.onCollision) {
-                entityA.components.collision.onCollision(entityB);
-                
+                entityA.components.collision.onCollision(entityB);   
             }
 
             if (entityB.components.collision.onCollision) {
                 entityB.components.collision.onCollision(entityA);
             }
+
+            this.reset();
         }
     }
 };
 
-CollisionSystem.prototype.resetPipes = function() {
-    for (var i=1; i<this.entities.length; i++ ) {
-        this.entities[i].components.physics.position.y += 1.5;
-    }
+CollisionSystem.prototype.reset = function() {
+    this.app.reset();
 };
 
 exports.CollisionSystem = CollisionSystem;
 },{}],12:[function(require,module,exports){
 var pipe = require('../entities/pipe');
 
-var GraphicsSystem = function(entities) {
-    this.entities = entities;
+var GraphicsSystem = function(app) {
+    this.entities = app.entities;
     // Canvas is where we draw
     this.canvas = document.getElementById('main-canvas');
     // Context is what we draw to
     this.context = this.canvas.getContext('2d');
+    this.increment = 0;
 };
 
 GraphicsSystem.prototype.run = function() {    
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
 
-    var increment = 0;
     function addPipe() {
-        this.entities.push(new pipe.Pipe('top', increment), new pipe.Pipe('bottom', increment));
-        increment += 0.025;
+        this.entities.push(new pipe.Pipe('top', this.increment), new pipe.Pipe('bottom', this.increment));
+        this.increment += 0.025;
 
-        var delay = 2000 - (increment * 5000);
+        var delay = 2000 - (this.increment * 5000);
         delay = delay < 1000 ? 1000 : delay;
         window.setTimeout(addPipe.bind(this), delay);
     }
-    // window.setInterval(addPipe.bind(this), 2000);
     window.setTimeout(addPipe.bind(this), 3000);
 };
 
@@ -398,6 +394,7 @@ GraphicsSystem.prototype.reset = function() {
     if (this.entities.length > 3) {
         this.entities.splice(3,this.entities.length);
     }
+    this.increment = 0;
     this.entities[0].components.physics.position.y = 0.5;
     this.entities[0].components.physics.acceleration.y = -0.8;
     this.entities[1].components.physics.position.x = 1.5;
@@ -407,8 +404,8 @@ GraphicsSystem.prototype.reset = function() {
 
 exports.GraphicsSystem = GraphicsSystem;
 },{"../entities/pipe":8}],13:[function(require,module,exports){
-var InputSystem = function(entities) {
-    this.entities = entities;
+var InputSystem = function(app) {
+    this.entities = app.entities;
 
     // Canvas is where we get input from
     this.canvas = document.getElementById('main-canvas');
@@ -433,9 +430,9 @@ exports.InputSystem = InputSystem;
 },{}],14:[function(require,module,exports){
 var collisionSystem = require("./collision");
 
-var PhysicsSystem = function(entities) {
-    this.entities = entities;
-    this.collisionSystem = new collisionSystem.CollisionSystem(entities);
+var PhysicsSystem = function(app) {
+    this.entities = app.entities;
+    this.collisionSystem = new collisionSystem.CollisionSystem(app);
 };
 
 PhysicsSystem.prototype.run = function() {

@@ -1,5 +1,6 @@
-var CollisionSystem = function(entities) {
-    this.entities = entities;
+var CollisionSystem = function(app) {
+    this.app = app;
+    this.entities = app.entities;
 };
 
 CollisionSystem.prototype.tick = function() {
@@ -20,25 +21,22 @@ CollisionSystem.prototype.tick = function() {
                 continue;
             }
 
-            this.resetPipes();
-
             // runs any entity specific methods on collision
             if (entityA.components.collision.onCollision) {
-                entityA.components.collision.onCollision(entityB);
-                
+                entityA.components.collision.onCollision(entityB);   
             }
 
             if (entityB.components.collision.onCollision) {
                 entityB.components.collision.onCollision(entityA);
             }
+
+            this.reset();
         }
     }
 };
 
-CollisionSystem.prototype.resetPipes = function() {
-    for (var i=1; i<this.entities.length; i++ ) {
-        this.entities[i].components.physics.position.y += 1.5;
-    }
+CollisionSystem.prototype.reset = function() {
+    this.app.reset();
 };
 
 exports.CollisionSystem = CollisionSystem;
