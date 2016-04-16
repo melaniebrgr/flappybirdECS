@@ -49,7 +49,7 @@ GraphicsSystem.prototype.tick = function() {
 };
 
 GraphicsSystem.prototype.reset = function() {
-    this.entities.splice(2,this.entities.length);
+    this.entities.splice(3,this.entities.length);
     this.increment = 0;
     this.entities[0].components.physics.position.y = 0.5;
     this.entities[0].components.physics.velocity.y = 0;
