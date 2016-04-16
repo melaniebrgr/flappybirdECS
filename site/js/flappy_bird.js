@@ -17,4 +17,9 @@ FlappyBird.prototype.run = function() {
     this.inputs.run();
 };
 
+FlappyBird.prototype.reset = function() {
+    this.graphics.reset();
+    // console.log('RESET:', this.entities);
+};
+
 exports.FlappyBird = FlappyBird;

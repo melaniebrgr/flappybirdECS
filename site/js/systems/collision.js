@@ -20,15 +20,16 @@ CollisionSystem.prototype.tick = function() {
                 continue;
             }
 
+            this.resetPipes();
+
             // runs any entity specific methods on collision
             if (entityA.components.collision.onCollision) {
                 entityA.components.collision.onCollision(entityB);
-                this.resetPipes();
+                
             }
 
             if (entityB.components.collision.onCollision) {
                 entityB.components.collision.onCollision(entityA);
-                this.resetPipes();
             }
         }
     }

@@ -273,17 +273,27 @@ FlappyBird.prototype.run = function() {
     this.inputs.run();
 };
 
+FlappyBird.prototype.reset = function() {
+    this.graphics.reset();
+    // console.log('RESET:', this.entities);
+};
+
 exports.FlappyBird = FlappyBird;
 },{"./entities/bird":7,"./entities/pipe":8,"./systems/graphics":12,"./systems/inputs":13,"./systems/physics":14}],10:[function(require,module,exports){
 var flappyBird = require('./flappy_bird');
 
+function launchFB() {
+	var app = new flappyBird.FlappyBird();
+	app.run();
+
+	// window.setTimeout(app.reset.bind(app), 3000);
+}
+
 if(document.readyState == 'complete') {
-  var app = new flappyBird.FlappyBird();
-  app.run();
+	launchFB();
 } else {
   document.addEventListener('DOMContentLoaded', function() {
-    var app = new flappyBird.FlappyBird();
-    app.run();
+	launchFB();
   });
 }
 },{"./flappy_bird":9}],11:[function(require,module,exports){
@@ -309,15 +319,16 @@ CollisionSystem.prototype.tick = function() {
                 continue;
             }
 
+            this.resetPipes();
+
             // runs any entity specific methods on collision
             if (entityA.components.collision.onCollision) {
                 entityA.components.collision.onCollision(entityB);
-                this.resetPipes();
+                
             }
 
             if (entityB.components.collision.onCollision) {
                 entityB.components.collision.onCollision(entityA);
-                this.resetPipes();
             }
         }
     }
@@ -367,23 +378,31 @@ GraphicsSystem.prototype.tick = function() {
     }
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
     this.context.save();
     this.context.translate(this.canvas.width / 2, this.canvas.height);
     this.context.scale(this.canvas.height, -this.canvas.height);
-
     for (var i=0; i<this.entities.length; i++) {
         var entity = this.entities[i];
         if ('graphics' in entity.components == false) {
             continue;
         }
-
         entity.components.graphics.draw(this.context);
     }
-
     this.context.restore();
 
     window.requestAnimationFrame(this.tick.bind(this));
+};
+
+GraphicsSystem.prototype.reset = function() {
+    console.log('Graphics before:', this.entities);
+    if (this.entities.length > 3) {
+        this.entities.splice(3,this.entities.length);
+    }
+    this.entities[0].components.physics.position.y = 0.5;
+    this.entities[0].components.physics.acceleration.y = -0.8;
+    this.entities[1].components.physics.position.x = 1.5;
+    this.entities[2].components.physics.position.x = 1.5;
+    console.log('Graphics after:', this.entities);
 };
 
 exports.GraphicsSystem = GraphicsSystem;
