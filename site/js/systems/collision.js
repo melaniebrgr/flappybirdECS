@@ -1,3 +1,6 @@
+var wallLeft = require('../entities/wallLeft');
+var WallLeft = wallLeft.WallLeft;
+
 var CollisionSystem = function(app) {
     this.app = app;
     this.entities = app.entities;
@@ -30,6 +33,11 @@ CollisionSystem.prototype.tick = function() {
                 entityB.components.collision.onCollision(entityA);
             }
 
+            if (entityA instanceof WallLeft || entityB instanceof WallLeft) {
+                this.deletePipes();
+                continue;
+            }
+
             this.reset();
         }
     }
@@ -37,6 +45,10 @@ CollisionSystem.prototype.tick = function() {
 
 CollisionSystem.prototype.reset = function() {
     this.app.reset();
+};
+
+CollisionSystem.prototype.deletePipes = function() {
+    this.entities.splice(4,2);
 };
 
 exports.CollisionSystem = CollisionSystem;
