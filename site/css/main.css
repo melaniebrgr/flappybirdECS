@@ -14,8 +14,13 @@ div#overlay {
 	z-index: 1;
 	top: 0;
 	left: 0;
+	pointer-events: none;
+	text-align: center;
 }
 
-div#score {
-	margin: 2em auto;
+span#score {
+	font-family: 'Sigmar One', sans-serif;
+	font-size: 3em;
+	display: inline-block;
+	margin: 0.5em auto;
 }
