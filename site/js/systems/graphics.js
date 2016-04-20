@@ -1,4 +1,5 @@
 var pipe = require('../entities/pipe');
+var detector = require('../entities/detector');
 
 var GraphicsSystem = function(app) {
     this.entities = app.entities;
@@ -12,17 +13,17 @@ var GraphicsSystem = function(app) {
 GraphicsSystem.prototype.run = function() {    
     // Run the render loop
     window.requestAnimationFrame(this.tick.bind(this));
+    window.setTimeout(this.addPipes.bind(this), 3000);
+};
 
-    function addPipe() {
-        this.entities.push(new pipe.Pipe('top', this.increment), new pipe.Pipe('bottom', this.increment));
+GraphicsSystem.prototype.addPipes = function() {
+        this.entities.push(new pipe.Pipe('top', this.increment), new pipe.Pipe('bottom', this.increment), new detector.Detector());
         this.increment += 0.025;
 
         var delay = 2000 - (this.increment * 5000);
         delay = delay < 1000 ? 1000 : delay;
-        window.setTimeout(addPipe.bind(this), delay);
-    }
-    window.setTimeout(addPipe.bind(this), 3000);
-};
+        window.setTimeout(this.addPipes.bind(this), delay);   
+}
 
 GraphicsSystem.prototype.tick = function() {
     // Set the canvas to the correct size if the window is resized

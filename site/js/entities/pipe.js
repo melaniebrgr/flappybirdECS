@@ -8,7 +8,7 @@ var Pipe = function(location, increment) {
     var canvasWidth = canvas.clientWidth/canvas.clientHeight;
 
     var size = new rectSizingComponent.RectSizingComponent(0.1, 0.22);
-    size.randomY(increment);
+    if (increment) size.randomY(increment);
 
     var physics = new physicsComponent.PhysicsComponent(this);
     physics.position.x = canvasWidth/2;
@@ -18,6 +18,7 @@ var Pipe = function(location, increment) {
     var collision = new collisionComponent.RectCollisionComponent(this, size.size);
     collision.onCollision = this.onCollision.bind(this);
 
+    var location = location || 'bottom';
     if (location === 'top') physics.position.y = 1 - size.size.y;
 
     this.components = {

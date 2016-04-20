@@ -6,9 +6,10 @@ var pipe = require('./entities/pipe');
 var floor = require('./entities/floor');
 var ceiling = require('./entities/ceiling');
 var wallLeft = require('./entities/wallLeft');
+var detector = require('./entities/detector');
 
 var FlappyBird = function() {
-    this.entities = [new bird.Bird(), new floor.Floor(), new ceiling.Ceiling(), new wallLeft.WallLeft(), new pipe.Pipe('top'), new pipe.Pipe('bottom')];
+    this.entities = [new bird.Bird(), new floor.Floor(), new ceiling.Ceiling(), new wallLeft.WallLeft(), new pipe.Pipe('top'), new pipe.Pipe('bottom'), new detector.Detector()];
     this.graphics = new graphicsSystem.GraphicsSystem(this);
     this.physics = new physicsSystem.PhysicsSystem(this);
     this.inputs =  new inputsSystem.InputSystem(this);

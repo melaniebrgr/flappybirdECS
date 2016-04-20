@@ -1,5 +1,9 @@
 var wallLeft = require('../entities/wallLeft');
+var bird = require('../entities/bird');
+var detector = require('../entities/detector');
 var WallLeft = wallLeft.WallLeft;
+var Bird = bird.Bird;
+var Detector = detector.Detector;
 
 var CollisionSystem = function(app) {
     this.app = app;
@@ -38,6 +42,10 @@ CollisionSystem.prototype.tick = function() {
                 continue;
             }
 
+            if ((entityA instanceof Detector && entityB instanceof Bird) || (entityA instanceof Bird && entityB instanceof Detector)) {
+                continue;
+            }
+
             this.reset();
         }
     }
@@ -48,7 +56,7 @@ CollisionSystem.prototype.reset = function() {
 };
 
 CollisionSystem.prototype.deletePipes = function() {
-    this.entities.splice(4,2);
+    this.entities.splice(4,3);
 };
 
 exports.CollisionSystem = CollisionSystem;
