@@ -310,7 +310,7 @@ var Detector = function() {
     physics.position.x = pipeRef.components.physics.position.x + pipeWidth + 0.001;
     physics.velocity.x = pipeRef.components.physics.velocity.x;
 
-	var graphics = new graphicsComponent.FloorGraphicsComponent(this, size.size);
+	// var graphics = new graphicsComponent.FloorGraphicsComponent(this, size.size);
 
     var collision = new collisionComponent.RectCollisionComponent(this, size.size);
     collision.onCollision = this.onCollision.bind(this);
@@ -318,8 +318,8 @@ var Detector = function() {
     this.components = {
     	id: id,
         physics: physics,
-        collision: collision,
-        graphics: graphics
+        // graphics: graphics,
+        collision: collision
     };    
 }
 
@@ -432,6 +432,7 @@ exports.WallLeft = WallLeft;
 var graphicsSystem = require('./systems/graphics');
 var physicsSystem = require('./systems/physics');
 var inputsSystem = require('./systems/inputs');
+var userInterfaceSystem = require('./systems/ui');
 var bird = require('./entities/bird');
 var pipe = require('./entities/pipe');
 var floor = require('./entities/floor');
@@ -444,6 +445,7 @@ var FlappyBird = function() {
     this.graphics = new graphicsSystem.GraphicsSystem(this);
     this.physics = new physicsSystem.PhysicsSystem(this);
     this.inputs =  new inputsSystem.InputSystem(this);
+    this.ui = new userInterfaceSystem.UserInterfaceSystem(this);
 };
 
 FlappyBird.prototype.run = function() {
@@ -457,7 +459,7 @@ FlappyBird.prototype.reset = function() {
 };
 
 exports.FlappyBird = FlappyBird;
-},{"./entities/bird":9,"./entities/ceiling":10,"./entities/detector":11,"./entities/floor":12,"./entities/pipe":13,"./entities/wallLeft":14,"./systems/graphics":18,"./systems/inputs":19,"./systems/physics":20}],16:[function(require,module,exports){
+},{"./entities/bird":9,"./entities/ceiling":10,"./entities/detector":11,"./entities/floor":12,"./entities/pipe":13,"./entities/wallLeft":14,"./systems/graphics":18,"./systems/inputs":19,"./systems/physics":20,"./systems/ui":21}],16:[function(require,module,exports){
 var flappyBird = require('./flappy_bird');
 
 function launchFB() {
@@ -485,7 +487,7 @@ var Detector = detector.Detector;
 var CollisionSystem = function(app) {
     this.app = app;
     this.entities = app.entities;
-    this.count = 0;
+    // this.count = 0;
     this.currentDetectorId;
 };
 
@@ -523,12 +525,8 @@ CollisionSystem.prototype.tick = function() {
 
             if (entityA instanceof Bird && entityB instanceof Detector) {
                 if (this.currentDetectorId !== entityB.components.id.id) {
-                    this.count++;
                     this.currentDetectorId = entityB.components.id.id;
-
-                    var score = document.getElementById('score');
-                    score.innerHTML = ''+this.count;
-                    console.log(this.count);
+                    this.app.ui.updateScore();
                 }
                 continue;
             }
@@ -657,4 +655,17 @@ PhysicsSystem.prototype.tick = function() {
 };
 
 exports.PhysicsSystem = PhysicsSystem;
-},{"./collision":17}]},{},[16]);
+},{"./collision":17}],21:[function(require,module,exports){
+var UserInterfaceSystem = function(app) {
+	this.app = app;
+	this.count = 0;
+};
+
+UserInterfaceSystem.prototype.updateScore = function() {
+    this.count++;
+    var score = document.getElementById('score');
+    score.innerHTML = ''+this.count;
+};
+
+exports.UserInterfaceSystem = UserInterfaceSystem;
+},{}]},{},[16]);

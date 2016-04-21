@@ -1,6 +1,7 @@
 var graphicsSystem = require('./systems/graphics');
 var physicsSystem = require('./systems/physics');
 var inputsSystem = require('./systems/inputs');
+var userInterfaceSystem = require('./systems/ui');
 var bird = require('./entities/bird');
 var pipe = require('./entities/pipe');
 var floor = require('./entities/floor');
@@ -13,6 +14,7 @@ var FlappyBird = function() {
     this.graphics = new graphicsSystem.GraphicsSystem(this);
     this.physics = new physicsSystem.PhysicsSystem(this);
     this.inputs =  new inputsSystem.InputSystem(this);
+    this.ui = new userInterfaceSystem.UserInterfaceSystem(this);
 };
 
 FlappyBird.prototype.run = function() {

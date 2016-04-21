@@ -17,7 +17,7 @@ var Detector = function() {
     physics.position.x = pipeRef.components.physics.position.x + pipeWidth + 0.001;
     physics.velocity.x = pipeRef.components.physics.velocity.x;
 
-	var graphics = new graphicsComponent.FloorGraphicsComponent(this, size.size);
+	// var graphics = new graphicsComponent.FloorGraphicsComponent(this, size.size);
 
     var collision = new collisionComponent.RectCollisionComponent(this, size.size);
     collision.onCollision = this.onCollision.bind(this);
@@ -25,8 +25,8 @@ var Detector = function() {
     this.components = {
     	id: id,
         physics: physics,
-        collision: collision,
-        graphics: graphics
+        // graphics: graphics,
+        collision: collision
     };    
 }
 
