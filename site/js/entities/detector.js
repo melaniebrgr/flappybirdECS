@@ -3,8 +3,11 @@ var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/rect");
 var rectSizingComponent = require("../components/size/rect");
 var pipe = require("./pipe");
+var idComponent = require("../components/id/id");
 
 var Detector = function() {
+	var id = new idComponent.IdComponent();
+
 	var size = new rectSizingComponent.RectSizingComponent(0.01, 1);
 
 	var pipeRef = new pipe.Pipe('top');
@@ -20,6 +23,7 @@ var Detector = function() {
     collision.onCollision = this.onCollision.bind(this);
 
     this.components = {
+    	id: id,
         physics: physics,
         collision: collision,
         graphics: graphics
@@ -28,7 +32,7 @@ var Detector = function() {
 
 Detector.prototype.onCollision = function(entity) {
     // Detector specific collision events
-    console.log('Detector collided with', entity);
+    // console.log('Detector id:', this.components.id);
 };
 
 exports.Detector = Detector;

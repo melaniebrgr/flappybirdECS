@@ -8,6 +8,8 @@ var Detector = detector.Detector;
 var CollisionSystem = function(app) {
     this.app = app;
     this.entities = app.entities;
+    this.count = 0;
+    this.currentDetectorId;
 };
 
 CollisionSystem.prototype.tick = function() {
@@ -42,7 +44,15 @@ CollisionSystem.prototype.tick = function() {
                 continue;
             }
 
-            if ((entityA instanceof Detector && entityB instanceof Bird) || (entityA instanceof Bird && entityB instanceof Detector)) {
+            if (entityA instanceof Bird && entityB instanceof Detector) {
+                if (this.currentDetectorId !== entityB.components.id.id) {
+                    this.count++;
+                    this.currentDetectorId = entityB.components.id.id;
+
+                    var score = document.getElementById('score');
+                    score.innerHTML = ''+this.count;
+                    console.log(this.count);
+                }
                 continue;
             }
 

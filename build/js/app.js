@@ -179,6 +179,16 @@ PipeGraphicsComponent.prototype.draw = function(context) {
 
 exports.PipeGraphicsComponent = PipeGraphicsComponent;
 },{}],6:[function(require,module,exports){
+var IdComponent = function() {
+	this.id = this.getId();
+}
+
+IdComponent.prototype.getId = function() {
+	return (new Date()).toString(16) + (Math.random() * 100000000 | 0).toString(16);
+};
+
+exports.IdComponent = IdComponent;
+},{}],7:[function(require,module,exports){
 var PhysicsComponent = function(entity) {
     this.entity = entity;
 
@@ -207,7 +217,7 @@ PhysicsComponent.prototype.update = function(delta) {
 };
 
 exports.PhysicsComponent = PhysicsComponent;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var RectSizingComponent = function(x, y) {
 	this.size = {
 		x: x,
@@ -224,7 +234,7 @@ RectSizingComponent.prototype.randomY = function(increment) {
 };
 
 exports.RectSizingComponent = RectSizingComponent;
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var graphicsComponent = require("../components/graphics/bird");
 var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/circle");
@@ -250,7 +260,7 @@ Bird.prototype.onCollision = function(entity) {
 };
 
 exports.Bird = Bird;
-},{"../components/collision/circle":1,"../components/graphics/bird":3,"../components/physics/physics":6}],9:[function(require,module,exports){
+},{"../components/collision/circle":1,"../components/graphics/bird":3,"../components/physics/physics":7}],10:[function(require,module,exports){
 var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/rect");
 var rectSizingComponent = require("../components/size/rect");
@@ -280,14 +290,17 @@ Ceiling.prototype.onCollision = function(entity) {
 };
 
 exports.Ceiling = Ceiling;
-},{"../components/collision/rect":2,"../components/physics/physics":6,"../components/size/rect":7}],10:[function(require,module,exports){
+},{"../components/collision/rect":2,"../components/physics/physics":7,"../components/size/rect":8}],11:[function(require,module,exports){
 var graphicsComponent = require("../components/graphics/floor");
 var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/rect");
 var rectSizingComponent = require("../components/size/rect");
 var pipe = require("./pipe");
+var idComponent = require("../components/id/id");
 
 var Detector = function() {
+	var id = new idComponent.IdComponent();
+
 	var size = new rectSizingComponent.RectSizingComponent(0.01, 1);
 
 	var pipeRef = new pipe.Pipe('top');
@@ -303,6 +316,7 @@ var Detector = function() {
     collision.onCollision = this.onCollision.bind(this);
 
     this.components = {
+    	id: id,
         physics: physics,
         collision: collision,
         graphics: graphics
@@ -311,11 +325,11 @@ var Detector = function() {
 
 Detector.prototype.onCollision = function(entity) {
     // Detector specific collision events
-    console.log('Detector collided with', entity);
+    // console.log('Detector id:', this.components.id);
 };
 
 exports.Detector = Detector;
-},{"../components/collision/rect":2,"../components/graphics/floor":4,"../components/physics/physics":6,"../components/size/rect":7,"./pipe":12}],11:[function(require,module,exports){
+},{"../components/collision/rect":2,"../components/graphics/floor":4,"../components/id/id":6,"../components/physics/physics":7,"../components/size/rect":8,"./pipe":13}],12:[function(require,module,exports){
 var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/rect");
 var rectSizingComponent = require("../components/size/rect");
@@ -345,7 +359,7 @@ Floor.prototype.onCollision = function(entity) {
 };
 
 exports.Floor = Floor;
-},{"../components/collision/rect":2,"../components/physics/physics":6,"../components/size/rect":7}],12:[function(require,module,exports){
+},{"../components/collision/rect":2,"../components/physics/physics":7,"../components/size/rect":8}],13:[function(require,module,exports){
 var graphicsComponent = require("../components/graphics/pipe");
 var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/rect");
@@ -360,7 +374,7 @@ var Pipe = function(location, increment) {
 
     var physics = new physicsComponent.PhysicsComponent(this);
     physics.position.x = canvasWidth/2;
-    physics.velocity.x = -0.2;
+    physics.velocity.x = -0.4;
 
     var graphics = new graphicsComponent.PipeGraphicsComponent(this, size.size);
     var collision = new collisionComponent.RectCollisionComponent(this, size.size);
@@ -382,7 +396,7 @@ Pipe.prototype.onCollision = function(entity) {
 };
 
 exports.Pipe = Pipe;
-},{"../components/collision/rect":2,"../components/graphics/pipe":5,"../components/physics/physics":6,"../components/size/rect":7}],13:[function(require,module,exports){
+},{"../components/collision/rect":2,"../components/graphics/pipe":5,"../components/physics/physics":7,"../components/size/rect":8}],14:[function(require,module,exports){
 var physicsComponent = require("../components/physics/physics");
 var collisionComponent = require("../components/collision/rect");
 var rectSizingComponent = require("../components/size/rect");
@@ -414,7 +428,7 @@ WallLeft.prototype.onCollision = function(entity) {
 };
 
 exports.WallLeft = WallLeft;
-},{"../components/collision/rect":2,"../components/physics/physics":6,"../components/size/rect":7,"./pipe":12}],14:[function(require,module,exports){
+},{"../components/collision/rect":2,"../components/physics/physics":7,"../components/size/rect":8,"./pipe":13}],15:[function(require,module,exports){
 var graphicsSystem = require('./systems/graphics');
 var physicsSystem = require('./systems/physics');
 var inputsSystem = require('./systems/inputs');
@@ -443,7 +457,7 @@ FlappyBird.prototype.reset = function() {
 };
 
 exports.FlappyBird = FlappyBird;
-},{"./entities/bird":8,"./entities/ceiling":9,"./entities/detector":10,"./entities/floor":11,"./entities/pipe":12,"./entities/wallLeft":13,"./systems/graphics":17,"./systems/inputs":18,"./systems/physics":19}],15:[function(require,module,exports){
+},{"./entities/bird":9,"./entities/ceiling":10,"./entities/detector":11,"./entities/floor":12,"./entities/pipe":13,"./entities/wallLeft":14,"./systems/graphics":18,"./systems/inputs":19,"./systems/physics":20}],16:[function(require,module,exports){
 var flappyBird = require('./flappy_bird');
 
 function launchFB() {
@@ -460,7 +474,7 @@ if(document.readyState == 'complete') {
 	launchFB();
   });
 }
-},{"./flappy_bird":14}],16:[function(require,module,exports){
+},{"./flappy_bird":15}],17:[function(require,module,exports){
 var wallLeft = require('../entities/wallLeft');
 var bird = require('../entities/bird');
 var detector = require('../entities/detector');
@@ -471,6 +485,8 @@ var Detector = detector.Detector;
 var CollisionSystem = function(app) {
     this.app = app;
     this.entities = app.entities;
+    this.count = 0;
+    this.currentDetectorId;
 };
 
 CollisionSystem.prototype.tick = function() {
@@ -505,7 +521,15 @@ CollisionSystem.prototype.tick = function() {
                 continue;
             }
 
-            if ((entityA instanceof Detector && entityB instanceof Bird) || (entityA instanceof Bird && entityB instanceof Detector)) {
+            if (entityA instanceof Bird && entityB instanceof Detector) {
+                if (this.currentDetectorId !== entityB.components.id.id) {
+                    this.count++;
+                    this.currentDetectorId = entityB.components.id.id;
+
+                    var score = document.getElementById('score');
+                    score.innerHTML = ''+this.count;
+                    console.log(this.count);
+                }
                 continue;
             }
 
@@ -523,7 +547,7 @@ CollisionSystem.prototype.deletePipes = function() {
 };
 
 exports.CollisionSystem = CollisionSystem;
-},{"../entities/bird":8,"../entities/detector":10,"../entities/wallLeft":13}],17:[function(require,module,exports){
+},{"../entities/bird":9,"../entities/detector":11,"../entities/wallLeft":14}],18:[function(require,module,exports){
 var pipe = require('../entities/pipe');
 var detector = require('../entities/detector');
 
@@ -583,7 +607,7 @@ GraphicsSystem.prototype.reset = function() {
 };
 
 exports.GraphicsSystem = GraphicsSystem;
-},{"../entities/detector":10,"../entities/pipe":12}],18:[function(require,module,exports){
+},{"../entities/detector":11,"../entities/pipe":13}],19:[function(require,module,exports){
 var InputSystem = function(app) {
     this.entities = app.entities;
 
@@ -607,7 +631,7 @@ InputSystem.prototype.onTouch = function() {
 }
 
 exports.InputSystem = InputSystem;
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var collisionSystem = require("./collision");
 
 var PhysicsSystem = function(app) {
@@ -633,4 +657,4 @@ PhysicsSystem.prototype.tick = function() {
 };
 
 exports.PhysicsSystem = PhysicsSystem;
-},{"./collision":16}]},{},[15]);
+},{"./collision":17}]},{},[16]);
